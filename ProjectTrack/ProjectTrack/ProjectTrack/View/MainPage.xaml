@@ -5,7 +5,7 @@
 
 
     <StackLayout>
-        <Label Text="{Binding Title}" VerticalOptions="Center" HorizontalOptions="Center" />
-        <Button Text="Next Action" Command="{Binding NavigationCommand}"/>
+        <Label Text="{Binding TimeString}" HorizontalOptions="Center"/>
+        <Button Text="{Binding Parameter}" Command="{Binding StopWatchCommand}" CommandParameter="{Binding Parameter}"></Button>
     </StackLayout>
 </ContentPage>

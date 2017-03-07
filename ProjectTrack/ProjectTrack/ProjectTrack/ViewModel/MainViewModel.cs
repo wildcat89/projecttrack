@@ -1,21 +1,56 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Views;
+using ProjectTrack.Model;
+using Xamarin.Forms;
 
 namespace ProjectTrack.ViewModel
 {
-    public class MainViewModel : ViewModelBase
+    public class MainViewModel : ViewModelBase, INotifyPropertyChanged
     {
-        public string Title { get; set; }
+        private string _timeString;
+        private string _parameterText;
+        private bool _controlTimer;
+        public string TimeString
+        {
+
+            get
+            {
+                return _timeString;
+            }
+
+            set
+            {
+                _timeString = value;
+                OnPropertyChanged();
+            }
+        }
+        public string Parameter
+        {
+
+            get
+            {
+                return _parameterText;
+            }
+
+            set
+            {
+                _parameterText = value;
+                OnPropertyChanged();
+            }
+        }
         private readonly INavigationService _navigationService;
         public MainViewModel(INavigationService navigationService)
         {
-            Title = "ProjectTrack";
+            Parameter = "Start";
 
             if (navigationService == null)
                 throw new ArgumentNullException("navigationService");
@@ -24,7 +59,6 @@ namespace ProjectTrack.ViewModel
             NavigationCommand =
                  new RelayCommand<string>((parameter) =>
                        Navigate(parameter));
-
         }
 
         private void Navigate(string parameter)
@@ -33,6 +67,48 @@ namespace ProjectTrack.ViewModel
                NavigateTo(ViewModelLocator.ListPage, parameter ?? string.Empty);
         }
 
+        public ICommand StopWatchCommand
+        {
+            get
+            {
+                return new Command(() =>
+                {
+                    StopWatch stopWatch;
+                    if (Parameter.Equals("Start"))
+                    {
+                        stopWatch = new StopWatch();
+                        _controlTimer = true;
+                        stopWatch.Start = DateTime.Now;
+                        Parameter = "Stop";
+                        Device.StartTimer(TimeSpan.FromSeconds(1), () =>
+                        {
+                            stopWatch.End = DateTime.Now;
+                            stopWatch.Time = stopWatch.End - stopWatch.Start;
+                            TimeString = string.Format("{0:hh\\:mm\\:ss}", stopWatch.Time);
+                            if (!_controlTimer) return false;
+                            return true;
+                        });
+                    }
+                    else
+                    {
+                        _controlTimer = false;
+                        Parameter = "Start";
+                    }
+                });
+            }
+        }
+
         public RelayCommand<string> NavigationCommand { get; private set; }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        private void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            var handler = PropertyChanged;
+            if (handler != null)
+            {
+                handler(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
     }
 }
