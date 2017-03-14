@@ -10,15 +10,17 @@ using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Views;
 using ProjectTrack.Model;
+using ProjectTrack.Services;
 using Xamarin.Forms;
 
 namespace ProjectTrack.ViewModel
 {
     public class MainViewModel : ViewModelBase, INotifyPropertyChanged
     {
-        private string _timeString;
         private string _parameterText;
         private bool _controlTimer;
+        private string _timeString;
+
         public string TimeString
         {
 
@@ -51,20 +53,10 @@ namespace ProjectTrack.ViewModel
         public MainViewModel(INavigationService navigationService)
         {
             Parameter = "Start";
-
             if (navigationService == null)
                 throw new ArgumentNullException("navigationService");
             _navigationService = navigationService;
 
-            NavigationCommand =
-                 new RelayCommand<string>((parameter) =>
-                       Navigate(parameter));
-        }
-
-        private void Navigate(string parameter)
-        {
-            _navigationService.
-               NavigateTo(ViewModelLocator.ListPage, parameter ?? string.Empty);
         }
 
         public ICommand StopWatchCommand
@@ -97,8 +89,6 @@ namespace ProjectTrack.ViewModel
                 });
             }
         }
-
-        public RelayCommand<string> NavigationCommand { get; private set; }
 
         public event PropertyChangedEventHandler PropertyChanged;
 

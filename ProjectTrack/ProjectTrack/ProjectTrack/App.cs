@@ -18,11 +18,12 @@ namespace ProjectTrack
             var nav = new NavigationService();
 
             nav.Configure(ViewModelLocator.MainPage, typeof(MainPage));
-            nav.Configure(ViewModelLocator.ListPage, typeof(ListPage));
+            nav.Configure(ViewModelLocator.ProjectPage, typeof(ProjectPage));
+            nav.Configure(ViewModelLocator.TabbedPage, typeof(Tabbed));
 
             SimpleIoc.Default.Register<INavigationService>(() => nav);
 
-            var mainPage = new NavigationPage(new MainPage());
+            var mainPage = new NavigationPage(new Tabbed());
 
             nav.Initialize(mainPage);
 
