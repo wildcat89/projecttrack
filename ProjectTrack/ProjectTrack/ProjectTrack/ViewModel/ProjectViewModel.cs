@@ -17,18 +17,50 @@ namespace ProjectTrack.ViewModel
     public class ProjectViewModel : ViewModelBase
     {
         private readonly INavigationService _navigationService;
-        public List<Project> Projects { get; set; }
+        private NozbeService nozbeService;
+        private Project _selectedProject;
+        public Project SelectedProject {
+            get { return _selectedProject; }
+            set
+            {
+                _selectedProject = value;
+
+                if (_selectedProject == null)
+                    return;
+
+                ShowTasksCommand.Execute(_selectedProject.Id);
+
+                SelectedProject = null;
+            }
+        }
+        public NotifyTaskCompletion<List<Project>> Projects { get; private set; }
+
+        public NotifyTaskCompletion<List<NozbeTask>> Tasks { get; private set; }
+
+        public ICommand ShowTasksCommand { get; private set; }
+
         public ProjectViewModel(INavigationService navigationService)
         {
 
-            NozbeService nozbeService = new NozbeService("xxx@gmail.com", "xxx");
-            string projects = nozbeService.Projects();
+            nozbeService = new NozbeService("xxx@gmail.com", "xxx");
 
-            Projects = JsonConvert.DeserializeObject<List<Project>>(projects);
+            Projects = new NotifyTaskCompletion<List<Project>>(GetProjects());
             if (navigationService == null) throw new ArgumentNullException("navigationService");
             _navigationService = navigationService;
 
+            ShowTasksCommand = new Command<string>(ShowTasks);
+
         }
 
+        public async Task<List<Project>> GetProjects()
+        {
+            var projects = await nozbeService.Projects();
+            return JsonConvert.DeserializeObject<List<Project>>(projects);
+        }
+
+        void ShowTasks(string Id)
+        {
+            _navigationService.NavigateTo(ViewModelLocator.TaskPage, Id);
+        }
     }
 }

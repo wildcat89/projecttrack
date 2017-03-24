@@ -17,23 +17,32 @@ namespace ProjectTrack.Services
             Key = "xxx";
         }
 
-        public string Login(string email, string password)
+        public async Task<string> Login(string email, string password)
         {
             using (var client = new HttpClient())
             {
-                var result = client.GetAsync("https://webapp.nozbe.com/api/login/email-"+email+"/password-"+password);
-                return result.Result.Content.ReadAsStringAsync().Result;
+                var result = await client.GetAsync("https://webapp.nozbe.com/api/login/email-"+email+"/password-"+password);
+                return await result.Content.ReadAsStringAsync();
             }
         }
 
-        public string Projects()
+        public async Task<string> Projects()
         {
             using (var client = new HttpClient())
             {
-                var result = client.GetAsync("https://webapp.nozbe.com/api/projects/key-" + Key);
-                return result.Result.Content.ReadAsStringAsync().Result;
+                var result = await client.GetAsync("https://webapp.nozbe.com/api/projects/key-" + Key);
+                return await result.Content.ReadAsStringAsync();
             }
             
+        }
+
+        public async Task<string> Tasks(string Id)
+        {
+            using (var client = new HttpClient())
+            {
+                var result = await client.GetAsync("https://webapp.nozbe.com/api/actions/what-project/id-"+Id+"/key-"+Key);
+                return await result.Content.ReadAsStringAsync();
+            }
         }
 
 

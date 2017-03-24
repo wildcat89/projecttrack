@@ -36,10 +36,12 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="App.cs" />
+    <Compile Include="Model\NozbeTask.cs" />
     <Compile Include="Model\Project.cs" />
     <Compile Include="Model\StopWatch.cs" />
     <Compile Include="NotifyTaskCompletion.cs" />
     <Compile Include="Services\NozbeService.cs" />
+    <Compile Include="ViewModel\TaskViewModel.cs" />
     <Compile Include="View\ProjectPage.xaml.cs">
       <DependentUpon>ProjectPage.xaml</DependentUpon>
     </Compile>
@@ -53,6 +55,9 @@
     <Compile Include="ViewModel\ViewModelLocator.cs" />
     <Compile Include="View\Tabbed.xaml.cs">
       <DependentUpon>Tabbed.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\TaskPage.xaml.cs">
+      <DependentUpon>TaskPage.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -114,6 +119,12 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="View\Tabbed.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="View\TaskPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
       <SubType>Designer</SubType>
     </EmbeddedResource>

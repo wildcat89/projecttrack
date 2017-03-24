@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using GalaSoft.MvvmLight.Ioc;
 using GalaSoft.MvvmLight.Views;
 using ProjectTrack.Services;
+using ProjectTrack.View;
 using ProjectTrack.ViewModel;
 using Xamarin.Forms;
 
@@ -20,6 +21,7 @@ namespace ProjectTrack
             nav.Configure(ViewModelLocator.MainPage, typeof(MainPage));
             nav.Configure(ViewModelLocator.ProjectPage, typeof(ProjectPage));
             nav.Configure(ViewModelLocator.TabbedPage, typeof(Tabbed));
+            nav.Configure(ViewModelLocator.TaskPage, typeof(TaskPage));
 
             SimpleIoc.Default.Register<INavigationService>(() => nav);
 
